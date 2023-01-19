@@ -36,10 +36,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label"> stock </label>
-                <select class="form-control" v-model="products.stock">
-                  <option value="1">Ready</option>
-                  <option value="0">Empty</option>
-                </select>
+                <input type="number" v-model="products.stock" class="form-control" min="1">
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label"> Image </label>

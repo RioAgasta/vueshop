@@ -19,15 +19,24 @@
                   <p class="card-text">Rp. {{ product.price }}</p>
                   <p class="card-text">Stock : {{ product.stock }}</p>
 
-                  <div class="row">
+                  <div class="row mb-2">
                     <router-link
-                      class="btn btn-primary rounded shadow mb-3"
+                      :to="{ name: 'detailpage', params: { id: product.id } }"
+                      class="btn btn-primary"
+                      >Order</router-link
+                    >
+                  </div>
+
+                  <div class="row" style="justify-content: space-between">
+                    <router-link
+                      class="btn btn-info rounded shadow"
+                      style="width: 48%; color: white;"
                       :to="{ name: 'editproduct', params: { id: product.id } }"
                       >Edit
                     </router-link>
-
                     <button
-                      class="btn btn-danger btm-sm rounded shadow"
+                      class="btn btn-danger rounded shadow"
+                      style="width: 48%;"
                       @click.prevent="delProduct(product.id)"
                     >
                       Delete

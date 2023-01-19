@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/product">Products</router-link> |
-    <router-link to="/addproduct">Add</router-link>
+    <router-link to="/addproduct">Add</router-link> |
+    <router-link to="/cart">Cart</router-link>
   </nav>
   <router-view/>
 </template>
