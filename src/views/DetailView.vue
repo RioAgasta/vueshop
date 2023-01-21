@@ -19,11 +19,14 @@
         <form v-on:submit.prevent="addCart" class="">
           <div class="form-group">
             <h4>{{ product.name }}</h4>
+            <h5>Stock : <strong>{{ product.stock }}</strong></h5>
             <hr />
             <h4>Harga : Rp. {{ product.price }}</h4>
             <label class="mb-2 mt-2"> Quantity </label>
             <input
               type="number"
+              min="1"
+              :max="product.stock"
               class="form-control mb-2"
               placeholder="Quantity"
               v-model="order.quantity"
@@ -40,7 +43,7 @@
               v-model="order.desc"
             ></textarea>
           </div>
-          <input type="text" :value="product.id" name="product_id" />
+          <input type="hidden" :value="product.id" name="product_id" />
 
           <button type="submit" class="btn btn-primary" @click="pemesanan">
             Submit
@@ -61,10 +64,7 @@ export default {
         // id
       },
       order: {
-        // id
-        // product
-        // quantity
-        // desc
+        quantity: 1
       },
     };
   },

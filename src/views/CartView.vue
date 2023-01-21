@@ -3,56 +3,71 @@
     <div class="row">
       <div class="col">
         <h2 id="nav-breadcrumbs">product Saya</h2>
-        <div class="table-responsive mt-3">
+        <div class="table mt-3">
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">No</th>
-                <th scope="col">Foto</th>
-                <th scope="col">Product</th>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
                 <th scope="col">Total</th>
-                <th>Hapus</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(producta, index) in products" :key="producta.id">
+              <tr v-for="(product, index) in cart" :key="product.id">
                 <td>{{ index + 1 }}</td>
                 <td>
                   <img
-                  :src="`http://localhost:8000/storage/${producta.image}`"
-                      class="img-fluid shadow"
-                      width="100"
-                    />
+                    :src="`http://localhost:8000/storage/${product.product_model.image}`"
+                    class="img-fluid shadow"
+                    width="100"
+                  />
                 </td>
+                <td>{{ product.product_model.name }}</td>
+                <td>{{ product.desc ? product.desc : "-" }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>Rp. {{ product.product_model.price }}</td>
                 <td>
-                  {{ producta.name }}
-                </td>
-                <td>
-                  {{ producta.desc ? producta.desc : "-" }}
-                </td>
-                <td>
-                  {{ producta.quantity }}
-                </td>
-                <td>
-                    Rp. {{ producta.price }}
-                </td>
-                <td>
-                    Rp. {{ producta.quantity * producta.price }}
+                  Rp. {{ product.quantity * product.product_model.price }}
                 </td>
                 <td class="text-danger" align="center">
-                  <i class="bi bi-trash" @click="hapusitem(producta.id)"></i>
+                  <div class="col">
+                    <div class="row" style="justify-content: space-between">
+                      <button
+                        class="btn btn-primary btm-sm rounded shadow"
+                        style="width: 48%"
+                        @click.prevent="increaseCart(product.id, index)"
+                      >
+                        <PlusIcon />
+                      </button>
+                      <button
+                        class="btn btn-warning btm-sm rounded shadow"
+                        style="width: 48%; color: white"
+                        @click.prevent="decreaseCart(product.id, index)"
+                      >
+                        <MinusIcon />
+                      </button>
+                    </div>
+                    <div class="row mt-2">
+                      <button
+                        class="btn btn-danger btm-sm rounded shadow"
+                        @click.prevent="delCart(product.id)"
+                      >
+                        <TrashCanIcon />
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
               <tr style="boder: none !important">
                 <td colspan="6" align="right" style="border-style: hidden">
                   Total Pembelian :
                 </td>
-                <td>
-                    Rp. {{ totalharga }}
-                </td>
+                <td>Rp. {{ totalharga }}</td>
                 <td style="border-style: hidden"></td>
               </tr>
             </tbody>
@@ -92,47 +107,84 @@
 
 <script>
 import axios from "axios";
+import TrashCanIcon from "vue-material-design-icons/TrashCan.vue";
+import PlusIcon from "vue-material-design-icons/Plus.vue";
+import MinusIcon from "vue-material-design-icons/Minus.vue";
 
 export default {
   name: "cartpage",
   data() {
     return {
-      products: [],
+      cart: [],
       pesan: {},
     };
   },
+  components: {
+    TrashCanIcon,
+    PlusIcon,
+    MinusIcon,
+  },
   methods: {
-    setproducts(data) {
-      this.products = data;
-      console.log(this.products);
-    },
-    async getProducts() {
-    //   let url 
-    },
     async getCart() {
       let url = "http://127.0.0.1:8000/api/getCart";
       await axios
         .get(url)
-        .then((response) => this.setproducts(response.data.data))
+        .then((response) => {
+          this.cart = response.data.data;
+          console.log(this.cart);
+        })
         .catch((error) => console.log(error));
     },
-    // hapusitem(id) {
-    //   axios
-    //     .delete("http://localhost:3000/keranjangs/" + id)
-    //     .then(() => {
-    //       alert("hapus data");
-    //       //retrieve data terbaru
-    //       axios
-    //         .get("http://localhost:3000/keranjangs")
-    //         .then((response) => this.setproducts(response.data))
-    //         .catch((error) => console.log(error));
-    //     })
-    //     .catch((error) => console.log(error));
-    // },
+    
+    async increaseCart(id, index) {
+      let url = `http://127.0.0.1:8000/api/editCart/${id}`;
+      let newQuantity = this.cart[index].quantity + 1;
+
+      console.log(newQuantity);
+      axios
+        .put(url, {
+          quantity: newQuantity,
+        })
+        .then((response) => {
+          this.cart = response.data.data;
+          this.getCart();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async decreaseCart(id, index) {
+      let url = `http://127.0.0.1:8000/api/editCart/${id}`;
+      let newQuantity = this.cart[index].quantity - 1;
+
+      console.log(newQuantity);
+
+      axios
+        .put(url, {
+          quantity: newQuantity,
+        })
+        .then((response) => {
+          this.cart = response.data.data;
+          this.getCart();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async delCart(id) {
+      let url = `http://127.0.0.1:8000/api/delCart/${id}`;
+      await axios
+        .delete(url)
+        .then((response) => {
+          alert(response.data.message);
+          this.getCart();
+        })
+        .catch((error) => console.log(error));
+    },
     // checkout() {
     //   if (this.pesan.nama && this.pesan.noMeja) {
-    //     this.pesan.producta = this.products;
-    //     this.pesan.producta;
+    //     this.pesan.product = this.products;
+    //     this.pesan.product;
 
     //     axios
     //       .post("http://localhost:3000/pesanans", this.pesan)
@@ -156,13 +208,12 @@ export default {
   mounted() {
     this.getCart();
   },
-  
-    computed: {
-      totalharga() {
-        return this.products.reduce(function (items, data) {
-          return items + data.price * data.quantity;
-        }, 0);
-      },
+  computed: {
+    totalharga() {
+      return this.cart.reduce(function (items, data) {
+        return items + data.product_model.price * data.quantity;
+      }, 0);
     },
+  },
 };
 </script>
