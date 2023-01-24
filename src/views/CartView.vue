@@ -196,15 +196,7 @@ export default {
               .then(() => {
                 axios.post("http://127.0.0.1:8000/api/addHistory");
               });
-            this.cart.map(async function (item) {
-              try {
-                return await axios.delete(
-                  "http://127.0.0.1:8000/api/delCart/" + item.id
-                );
-              } catch (e) {
-                return console.log(e);
-              }
-            });
+
             alert(response.data.message);
             this.order.name = "";
             this.order.table_num = "";
@@ -216,6 +208,16 @@ export default {
       } else {
         alert("Name and Table Number Cannot be Empty");
       }
+      this.cart.map(async function (item) {
+        try {
+          return await axios.delete(
+            "http://127.0.0.1:8000/api/delCart/" + item.id
+          );
+        } catch (e) {
+          return console.log(e);
+        }
+      });
+      this.getCart();
     },
   },
   mounted() {
