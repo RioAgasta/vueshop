@@ -80,15 +80,15 @@
       <div class="col-md-4">
         <form v-on:submit.prevent class="">
           <div class="form-group">
-            <label class="mb-2 mt-4">Nama</label>
-            <input type="text" class="form-control" v-model="pesan.nama" />
+            <label class="mb-2 mt-4">Name</label>
+            <input type="text" class="form-control" v-model="order.name" />
           </div>
           <div class="form-group">
-            <label class="mb-2 mt-2">Nomor Meja</label>
+            <label class="mb-2 mt-2">Table Number</label>
             <input
               type="text"
               class="form-control mb-2"
-              v-model="pesan.noMeja"
+              v-model="order.table_num"
             />
           </div>
           <button
@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       cart: [],
-      pesan: {},
+      order: {},
     };
   },
   components: {
@@ -135,7 +135,7 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    
+
     async increaseCart(id, index) {
       let url = `http://127.0.0.1:8000/api/editCart/${id}`;
       let newQuantity = this.cart[index].quantity + 1;
@@ -181,29 +181,42 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    // checkout() {
-    //   if (this.pesan.nama && this.pesan.noMeja) {
-    //     this.pesan.product = this.products;
-    //     this.pesan.product;
+    async checkout() {
+      if (this.order.name && this.order.table_num) {
+        let url = "http://127.0.0.1:8000/api/addOrder";
+        this.order.cart = this.cart;
 
-    //     axios
-    //       .post("http://localhost:3000/pesanans", this.pesan)
-    //       .then(() => {
-    //         this.products.map(function (item) {
-    //           return axios
-    //             .delete("http://localhost:3000/keranjangs/" + item.id)
-    //             .catch((error) => console.log(error));
-    //         });
-    //         alert("sukses di pesan");
-    //         this.$router.push({ path: "/sukses-pesan" });
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   } else {
-    //     alert("Nama dan No meja tidak boleh kosong");
-    //   }
-    // },
+        await axios
+          .post(url, this.order)
+          .then((response) => {
+            axios
+              .put(
+                "http://127.0.0.1:8000/api/getOrderId/" + response.data.data.id
+              )
+              .then(() => {
+                axios.post("http://127.0.0.1:8000/api/addHistory");
+              });
+            this.cart.map(async function (item) {
+              try {
+                return await axios.delete(
+                  "http://127.0.0.1:8000/api/delCart/" + item.id
+                );
+              } catch (e) {
+                return console.log(e);
+              }
+            });
+            alert(response.data.message);
+            this.order.name = "";
+            this.order.table_num = "";
+            this.getCart();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        alert("Name and Table Number Cannot be Empty");
+      }
+    },
   },
   mounted() {
     this.getCart();

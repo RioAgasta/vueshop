@@ -87,7 +87,7 @@ export default {
         .post("http://127.0.0.1:8000/api/addCart", this.order)
         .then(() => {
           alert("Masuk keranjang");
-          this.$router.push({ name: "cartpage" });
+          this.$router.push({ name: "productlist" });
         })
         .catch((error) => {
           console.log(error);
