@@ -45,7 +45,7 @@
           </div>
           <input type="hidden" :value="product.id" name="product_id" />
 
-          <button type="submit" class="btn btn-primary" @click="pemesanan">
+          <button type="submit" class="btn btn-primary">
             Submit
           </button>
         </form>

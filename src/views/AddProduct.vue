@@ -1,11 +1,9 @@
 <template>
   <div class="container">
+    <h2><strong>Add Product</strong></h2>
     <div class="card border-primary mt-5 shadow mt-4">
       <div class="card-body">
         <div class="row">
-          <div class="col">
-            <h4><span class="badge bg-primary"> Add Product </span></h4>
-          </div>
         </div>
         <div class="row mt-2">
           <div class="col p-4">

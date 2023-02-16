@@ -2,11 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h2 id="nav-breadcrumbs">product Saya</h2>
+        <h2 id="nav-breadcrumbs"><strong>My Shopping Cart</strong></h2>
         <div class="table mt-3">
           <table class="table">
             <thead>
-              <tr>
+              <tr class="table-primary">
                 <th scope="col">No</th>
                 <th scope="col">Image</th>
                 <th scope="col">Name</th>
@@ -18,7 +18,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(product, index) in cart" :key="product.id">
+              <tr v-for="(product, index) in cart" :key="product.id" class="table-info">
                 <td>{{ index + 1 }}</td>
                 <td>
                   <img
@@ -39,27 +39,35 @@
                     <div class="row" style="justify-content: space-between">
                       <button
                         class="btn btn-primary btm-sm rounded shadow"
-                        style="width: 48%"
+                        style="width: 35%"
                         @click.prevent="increaseCart(product.id, index)"
                       >
                         <PlusIcon />
                       </button>
                       <button
                         class="btn btn-warning btm-sm rounded shadow"
-                        style="width: 48%; color: white"
+                        style="width: 35%; color: white"
                         @click.prevent="decreaseCart(product.id, index)"
                       >
                         <MinusIcon />
                       </button>
-                    </div>
-                    <div class="row mt-2">
                       <button
+                        style="width: 25%"
                         class="btn btn-danger btm-sm rounded shadow"
                         @click.prevent="delCart(product.id)"
                       >
                         <TrashCanIcon />
                       </button>
                     </div>
+                    <!-- <div class="row mt-2">
+                      <button
+                        style="width: 30%"
+                        class="btn btn-danger btm-sm rounded shadow"
+                        @click.prevent="delCart(product.id)"
+                      >
+                        <TrashCanIcon />
+                      </button>
+                    </div> -->
                   </div>
                 </td>
               </tr>
@@ -195,6 +203,8 @@ export default {
               )
               .then(() => {
                 axios.post("http://127.0.0.1:8000/api/addHistory");
+              }).catch((error) => {
+                console.log(error);
               });
 
             alert(response.data.message);

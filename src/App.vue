@@ -1,12 +1,40 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/product">Products</router-link> |
-    <router-link to="/addproduct">Add</router-link> |
-    <router-link to="/cart">Cart</router-link>
-  </nav>
-  <router-view/>
-</template>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 bg-primary">
+      <div class="container">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 ml-0">
+              <a class="navbar-brand" href="#">Toko Jaya Abadi</a>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/">Home</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/product">Menu</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/cart">Keranjang</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/addproduct">Tambah Produk</router-link>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-light" type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <router-view />
+  </template>
 
 <style>
 #app {
@@ -17,7 +45,7 @@
   color: #2c3e50;
 }
 
-nav {
+/* nav {
   padding: 30px;
 }
 
@@ -28,5 +56,5 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
-}
+} */
 </style>
